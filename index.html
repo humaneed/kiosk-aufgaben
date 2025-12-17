@@ -14,9 +14,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
 
   <style>
-    /* ============================================
-       KIDSNEED DESIGN SYSTEM (kompatibel)
-       ============================================ */
     :root {
       --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px; --s-5: 48px;
 
@@ -36,12 +33,10 @@
       --ink-secondary: #6B665C;
       --ink-light: #9C9588;
 
-      /* Mathe-Akzent (wie Kidsneed) */
       --accent: #4A7C91;
       --accent-dark: #3A6275;
       --accent-light: rgba(74,124,145,.12);
 
-      /* Warmes Money-Highlight */
       --money: #D4A574;
       --money-bg: rgba(212,165,116,.16);
 
@@ -266,7 +261,6 @@
       color: var(--ink-secondary);
     }
 
-    /* === VERBESSERTE RECHNUNG === */
     .receipt{
       background: var(--bg-card);
       border: 3px solid var(--accent);
@@ -666,13 +660,7 @@
     <div class="overlay" id="modal-settings">
       <div class="sheet">
         <h2>⚙️ Einstellungen</h2>
-        <p>Klein, ruhig, kindgerecht. (Tastatur: 1–4 Antwort · Enter neue Aufgabe · E Erklärung)</p>
-
-        <div class="explain" style="margin-bottom: var(--s-2);">
-          <div class="ex-title">🧠 Schwierigkeits-Regel</div>
-          <div class="ex-step">70% Kern: Geld rechnen (Summe/Wechselgeld) · 30% Wiederholung (leichter)</div>
-          <div class="ex-step">Typische Fehler-Antworten sind dabei (z.B. Cent vergessen).</div>
-        </div>
+        <p>Tastatur: 1–4 Antwort · Enter neue Aufgabe · E Erklärung</p>
 
         <div class="explain">
           <div class="ex-title">🔊 Ton</div>
@@ -778,7 +766,7 @@
     } catch {}
   };
 
-  // === SOUND (simple beeps) ===
+  // === SOUND ===
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const playBeep = (frequency, duration, type = 'sine') => {
     if (!state.settings.sound) return;
@@ -806,36 +794,36 @@
   // === ITEMS (Preise in Cent) ===
   const ITEM_POOLS = {
     1: [
-      { n: 'Apfel', c: [50, 100, 150] },
-      { n: 'Banane', c: [30, 60, 90] },
-      { n: 'Brötchen', c: [40, 80, 120] },
-      { n: 'Saft', c: [100, 150, 200] },
-      { n: 'Keks', c: [20, 50, 70] },
-      { n: 'Sticker', c: [50, 100] }
+      { n: 'Apfel', c: [50, 80, 100] },
+      { n: 'Banane', c: [30, 50, 70] },
+      { n: 'Brötchen', c: [40, 60, 80] },
+      { n: 'Saft', c: [100, 120, 150] },
+      { n: 'Keks', c: [20, 40, 50] },
+      { n: 'Sticker', c: [50, 80, 100] }
     ],
     2: [
-      { n: 'Schokoriegel', c: [80, 120, 150] },
-      { n: 'Wasser', c: [70, 100, 130] },
-      { n: 'Apfelschorle', c: [120, 150, 180] },
-      { n: 'Butterkeks', c: [90, 110, 140] },
-      { n: 'Bleistift', c: [50, 80, 100] },
-      { n: 'Radiergummi', c: [60, 90, 120] }
+      { n: 'Schokoriegel', c: [80, 95, 120] },
+      { n: 'Wasser', c: [70, 90, 110] },
+      { n: 'Apfelschorle', c: [120, 145, 180] },
+      { n: 'Butterkeks', c: [90, 110, 130] },
+      { n: 'Bleistift', c: [50, 75, 95] },
+      { n: 'Radiergummi', c: [60, 85, 110] }
     ],
     3: [
-      { n: 'Müsliriegel', c: [95, 125, 165] },
-      { n: 'Sandwich', c: [220, 250, 280] },
-      { n: 'Saftbox', c: [145, 175, 205] },
-      { n: 'Notizheft', c: [180, 220, 260] },
-      { n: 'Marker', c: [150, 200, 250] },
-      { n: 'Fruchtmix', c: [160, 210, 260] }
+      { n: 'Müsliriegel', c: [95, 125, 155] },
+      { n: 'Sandwich', c: [220, 265, 290] },
+      { n: 'Saftbox', c: [145, 175, 195] },
+      { n: 'Notizheft', c: [180, 220, 250] },
+      { n: 'Marker', c: [150, 185, 230] },
+      { n: 'Fruchtmix', c: [160, 195, 240] }
     ],
     4: [
-      { n: 'Wrap', c: [290, 340, 390] },
-      { n: 'Smoothie', c: [250, 300, 350] },
-      { n: 'Kakao', c: [175, 225, 275] },
-      { n: 'Mini-Spiel', c: [399, 449, 499] },
-      { n: 'Buchzeichen', c: [120, 170, 220] },
-      { n: 'Sticker-Set', c: [199, 249, 299] }
+      { n: 'Wrap', c: [290, 335, 385] },
+      { n: 'Smoothie', c: [250, 295, 345] },
+      { n: 'Kakao', c: [175, 215, 265] },
+      { n: 'Mini-Spiel', c: [399, 449, 495] },
+      { n: 'Buchzeichen', c: [120, 165, 215] },
+      { n: 'Sticker-Set', c: [199, 249, 295] }
     ]
   };
 
@@ -846,26 +834,43 @@
     return { name: it.n, price: cents };
   };
 
-  // === TASK TYPES ===
+  // === VALIDIERUNG: Ist Aufgabe trivial? ===
+  // Trivial = Lösung kann ohne Rechnung abgelesen werden
+  const isTaskTrivial = (lines, type) => {
+    // Nur 1 Position mit Menge 1 = trivial (Preis = Antwort bei Summe)
+    if (lines.length === 1 && lines[0].qty === 1) {
+      return true;
+    }
+    
+    // Alle Mengen sind 1 UND nur 1 Position = trivial
+    const totalQty = lines.reduce((sum, l) => sum + l.qty, 0);
+    if (lines.length === 1 && totalQty === 1) {
+      return true;
+    }
+    
+    return false;
+  };
+
+  // === TASK GENERATION ===
   const createTask = (grade) => {
-    const coreTypes = ['total', 'change'];
-    const reviewTypes = ['total_easy'];
+    const types = ['total', 'change'];
+    const type = types[rand(0, types.length - 1)];
 
-    const roll = Math.random();
-    const type = roll < 0.70
-      ? coreTypes[rand(0, coreTypes.length - 1)]
-      : reviewTypes[rand(0, reviewTypes.length - 1)];
-
-    if (type === 'total_easy') return makeTotalTask(grade, true);
-    if (type === 'total') return makeTotalTask(grade, false);
+    if (type === 'total') return makeTotalTask(grade);
     return makeChangeTask(grade);
   };
 
-  const makeTotalTask = (grade, easy) => {
-    const positions = easy ? rand(1, 2) : rand(2, 3);
+  const makeTotalTask = (grade) => {
+    // WICHTIG: Mindestens 2 Positionen ODER mindestens eine Menge > 1
+    // damit tatsächlich gerechnet werden muss
+    
+    const minPositions = 2; // Immer mindestens 2 Positionen
+    const maxPositions = grade === 1 ? 3 : grade === 2 ? 4 : grade === 3 ? 4 : 5;
+    const positions = rand(minPositions, maxPositions);
 
     const used = new Set();
     const lines = [];
+    
     for (let i = 0; i < positions; i++) {
       let it;
       for (let t = 0; t < 12; t++) {
@@ -874,55 +879,45 @@
       }
       used.add(it.name);
 
-      const qtyMax = grade === 1 ? (easy ? 2 : 3)
-                   : grade === 2 ? (easy ? 3 : 4)
-                   : grade === 3 ? (easy ? 3 : 5)
-                   : (easy ? 4 : 6);
-      const qtyMin = 1;
+      // Mengen je nach Klasse
+      const qtyMin = grade === 1 ? 1 : 1;
+      const qtyMax = grade === 1 ? 3 : grade === 2 ? 4 : grade === 3 ? 5 : 6;
       const qty = rand(qtyMin, qtyMax);
 
       lines.push({ qty, name: it.name, price: it.price });
     }
 
-    if (grade === 1 && easy) {
-      lines.forEach(l => {
-        const options = [50, 100, 150].filter(v => v <= 150);
-        l.price = options[rand(0, options.length - 1)];
-      });
+    // Sicherstellen, dass mindestens EINE Zeile Menge > 1 hat
+    // ODER es mehr als eine Position gibt
+    const hasMultiplication = lines.some(l => l.qty > 1);
+    if (!hasMultiplication && lines.length < 2) {
+      // Forciere Menge > 1 bei erster Zeile
+      lines[0].qty = rand(2, grade === 1 ? 3 : 4);
     }
 
     const sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
 
     const prompt = grade === 1
       ? 'Wie viel kostet alles zusammen?'
-      : 'Wie teuer ist der Einkauf zusammen?';
+      : 'Wie teuer ist der Einkauf?';
 
-    const taskTag = (easy ? 'Summe (leicht)' : 'Summe');
-
-    const explainSteps = lines.map(l => ({
-      title: `${l.qty}× ${l.name}`,
-      math: `${l.qty} × ${fmtMoney(l.price)} = ${fmtMoney(l.qty * l.price)}`,
-      note: 'Erst mal jede Zeile ausrechnen.'
-    }));
-
-    explainSteps.push({
-      title: 'Alles addieren',
-      math: `${lines.map(l => fmtMoney(l.qty * l.price)).join(' + ')} = ${fmtMoney(sum)}`,
-      note: 'Dann alle Zwischensummen zusammenzählen.'
-    });
+    const taskTag = 'Summe berechnen';
 
     return buildTask({
       type: 'total',
       taskTag,
       prompt,
       lines,
-      answerCents: sum,
-      explainSteps
+      answerCents: sum
     });
   };
 
   const makeChangeTask = (grade) => {
-    const positions = grade === 1 ? 1 : rand(1, 3);
+    // Für Wechselgeld: Auch hier echte Rechenaufgabe
+    const minPositions = grade === 1 ? 1 : 2;
+    const maxPositions = grade === 1 ? 2 : grade === 2 ? 3 : 4;
+    const positions = rand(minPositions, maxPositions);
+    
     const used = new Set();
     const lines = [];
 
@@ -934,51 +929,43 @@
       }
       used.add(it.name);
 
+      const qtyMin = 1;
       const qtyMax = grade === 1 ? 2 : grade === 2 ? 3 : grade === 3 ? 4 : 5;
-      const qty = rand(1, qtyMax);
+      const qty = rand(qtyMin, qtyMax);
       lines.push({ qty, name: it.name, price: it.price });
     }
 
-    let sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
+    // Bei nur 1 Position: Menge muss > 1 sein
+    if (lines.length === 1 && lines[0].qty === 1) {
+      lines[0].qty = rand(2, grade === 1 ? 3 : 4);
+    }
 
+    const sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
+
+    // Bezahlbetrag wählen
     const pays = grade === 1 ? [200, 500, 1000]
                : grade === 2 ? [500, 1000, 2000]
                : grade === 3 ? [1000, 2000, 5000]
                : [1000, 2000, 5000, 10000];
 
     let pay = pays[rand(0, pays.length - 1)];
-    for (let i = 0; i < 6 && pay <= sum; i++) pay = pays[Math.min(pays.length - 1, rand(0, pays.length - 1))];
-    if (pay <= sum) pay = sum + (grade <= 2 ? 200 : 500);
-
-    if (grade === 1) {
-      pay = [200, 500, 1000].find(p => p > sum) || (sum + 200);
+    // Sicherstellen, dass pay > sum
+    for (let i = 0; i < 10 && pay <= sum; i++) {
+      pay = pays[Math.min(pays.length - 1, rand(0, pays.length - 1))];
+    }
+    if (pay <= sum) {
+      pay = sum + (grade <= 2 ? 200 : 500);
+      // Aufrunden auf glatten Betrag
+      pay = Math.ceil(pay / 100) * 100;
     }
 
     const change = pay - sum;
 
     const prompt = grade === 1
-      ? `Du bezahlst mit ${fmtMoney(pay)}. Wie viel Geld bekommst du zurück?`
-      : `Du gibst ${fmtMoney(pay)}. Wie viel Wechselgeld bekommst du?`;
+      ? `Du bezahlst mit ${fmtMoney(pay)}. Wie viel bekommst du zurück?`
+      : `Du gibst ${fmtMoney(pay)}. Wie viel Wechselgeld?`;
 
     const taskTag = 'Wechselgeld';
-
-    const explainSteps = lines.map(l => ({
-      title: `${l.qty}× ${l.name}`,
-      math: `${l.qty} × ${fmtMoney(l.price)} = ${fmtMoney(l.qty * l.price)}`,
-      note: 'Zeilen ausrechnen.'
-    }));
-
-    explainSteps.push({
-      title: 'Summe',
-      math: `${lines.map(l => fmtMoney(l.qty * l.price)).join(' + ')} = ${fmtMoney(sum)}`,
-      note: 'Das ist der Preis insgesamt.'
-    });
-
-    explainSteps.push({
-      title: 'Wechselgeld',
-      math: `${fmtMoney(pay)} − ${fmtMoney(sum)} = ${fmtMoney(change)}`,
-      note: 'Bezahlen minus Summe.'
-    });
 
     return buildTask({
       type: 'change',
@@ -986,12 +973,11 @@
       prompt,
       lines,
       payCents: pay,
-      answerCents: change,
-      explainSteps
+      answerCents: change
     });
   };
 
-  const buildTask = ({ type, taskTag, prompt, lines, payCents, answerCents, explainSteps }) => {
+  const buildTask = ({ type, taskTag, prompt, lines, payCents, answerCents }) => {
     const options = makeOptions(answerCents, { type, lines, payCents });
     const correctIndex = options.indexOf(answerCents);
 
@@ -1003,8 +989,7 @@
       payCents: payCents ?? null,
       answerCents,
       optionsCents: options,
-      correctIndex,
-      explainSteps
+      correctIndex
     };
   };
 
@@ -1015,42 +1000,46 @@
       if (Number.isFinite(v) && v >= 0 && v <= 20000) opts.add(Math.round(v));
     };
 
+    // Plausible Falschantworten
     const bump = state.grade <= 2 ? 50 : 100;
     add(answerCents + bump);
     add(answerCents - bump);
+    add(answerCents + bump * 2);
 
-    const euroOnly = Math.round((Math.floor(answerCents / 100) * 100));
-    add(euroOnly);
-    add(euroOnly + 100);
-
+    // Typische Rechenfehler
     if (ctx.type === 'change' && ctx.payCents != null) {
       const sum = ctx.payCents - answerCents;
-      add(sum);
-      add(ctx.payCents + sum);
+      add(sum); // Summe statt Wechselgeld
+      add(ctx.payCents - sum + 100); // Um 1€ verrechnet
     }
 
     if (ctx.type === 'total' && Array.isArray(ctx.lines) && ctx.lines.length > 0) {
+      // Eine Position vergessen
       const l = ctx.lines[rand(0, ctx.lines.length - 1)];
-      const wrong = answerCents - (l.qty * l.price) + l.price;
-      add(wrong);
+      add(answerCents - (l.qty * l.price));
+      // Menge vergessen
+      add(answerCents - l.price * (l.qty - 1));
     }
 
+    // Auffüllen
     while (opts.size < 4) {
-      const delta = rand(-6, 6) * (state.grade <= 2 ? 25 : 50);
-      add(answerCents + delta);
+      const delta = rand(-8, 8) * (state.grade <= 2 ? 25 : 50);
+      if (delta !== 0) add(answerCents + delta);
     }
 
-    const arr = Array.from(opts).slice(0, 4);
+    let arr = Array.from(opts).filter(v => v >= 0).slice(0, 4);
+    
+    // Sicherstellen dass richtige Antwort dabei ist
+    if (!arr.includes(answerCents)) {
+      arr[0] = answerCents;
+    }
+
+    // Mischen
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    if (!arr.includes(answerCents)) arr[0] = answerCents;
-
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
+    
     return arr;
   };
 
@@ -1096,23 +1085,37 @@
     
     receipt.style.display = 'block';
 
+    // Zeilen anzeigen - nur Anzahl × Artikel und Einzelpreis
     linesEl.innerHTML = task.lines.map(l => {
       const left = `${l.qty}× ${l.name}`;
       const right = fmtMoney(l.price);
       return `<div class="rline"><span class="name">${left}</span><span class="price">${right}</span></div>`;
     }).join('');
 
-    const sum = task.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
-    metaEl.innerHTML = `
-      <span>Summe:</span>
-      <span class="rmeta-total">${fmtMoney(sum)}</span>
-    `;
+    // META-BEREICH: 
+    // Bei Summen-Aufgaben: KEINE Summe anzeigen (die ist ja die Aufgabe!)
+    // Bei Wechselgeld: Summe + Bezahlbetrag anzeigen (Wechselgeld ist die Aufgabe)
     
-    if (task.payCents != null) {
-      metaEl.innerHTML += `
-        <span style="margin-top: 8px;">Du gibst:</span>
-        <span class="rmeta-total" style="color: var(--money)">${fmtMoney(task.payCents)}</span>
+    if (task.type === 'total') {
+      // Summen-Aufgabe: Nur Hinweis, keine Summe!
+      metaEl.innerHTML = `
+        <span style="font-style: italic; color: var(--ink-secondary);">Rechne alle Zeilen zusammen!</span>
+        <span class="rmeta-total" style="color: var(--ink-light);">?</span>
       `;
+    } else {
+      // Wechselgeld: Summe berechnen und Bezahlbetrag zeigen
+      const sum = task.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
+      metaEl.innerHTML = `
+        <span>Summe:</span>
+        <span class="rmeta-total">${fmtMoney(sum)}</span>
+      `;
+      
+      if (task.payCents != null) {
+        metaEl.innerHTML += `
+          <span style="margin-top: 8px;">Du gibst:</span>
+          <span class="rmeta-total" style="color: var(--money)">${fmtMoney(task.payCents)}</span>
+        `;
+      }
     }
   };
 
@@ -1169,62 +1172,53 @@
 
     const t = state.currentTask;
     let html = `<div class="explain">
-      <div class="ex-title">📝 Schritt für Schritt</div>
-      <div class="receipt">
-        <div class="receipt-head">
-          <div class="badge">🧾 Dein Einkauf</div>
-          <div class="badge ${t.type === 'change' ? 'type-change' : 'type-sum'}">${t.taskTag}</div>
-        </div>
-        <div class="receipt-lines">`;
+      <div class="ex-title">📝 Schritt für Schritt</div>`;
 
-    t.lines.forEach((l) => {
+    // Schritt 1: Jede Zeile berechnen
+    html += `<div class="ex-step"><strong>1. Jede Zeile ausrechnen:</strong></div>`;
+    
+    t.lines.forEach((l, i) => {
       const lineSum = l.qty * l.price;
-      html += `
-        <div class="rline" style="background: var(--color-success-bg); padding: 8px; border-radius: 8px; margin-bottom: 4px;">
-          <span class="name">${l.qty}× ${l.name}</span>
-          <span class="price">${fmtMoney(l.price)}</span>
-        </div>
-        <div style="text-align: right; font-size: var(--text-sm); color: var(--ink-secondary); margin-top: -2px; margin-bottom: 8px;">
-          → ${l.qty} × ${fmtMoney(l.price)} = <strong style="color: var(--color-success)">${fmtMoney(lineSum)}</strong>
-        </div>
-      `;
+      if (l.qty === 1) {
+        html += `<div class="ex-step" style="margin-left: 16px; background: var(--color-success-bg);">
+          ${l.name}: ${fmtMoney(l.price)}
+        </div>`;
+      } else {
+        html += `<div class="ex-step" style="margin-left: 16px; background: var(--color-success-bg);">
+          ${l.qty} × ${fmtMoney(l.price)} = <strong>${fmtMoney(lineSum)}</strong>
+          <small>${l.qty} mal ${l.name}</small>
+        </div>`;
+      }
     });
 
-    html += `</div>`;
-
+    // Schritt 2: Summe
     const sum = t.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
-    html += `
-      <div class="rmeta">
-        <span style="font-size: var(--text-lg);">Summe:</span>
-        <span class="rmeta-total">${fmtMoney(sum)}</span>
-      </div>
-    `;
+    const lineSums = t.lines.map(l => fmtMoney(l.qty * l.price));
+    
+    html += `<div class="ex-step"><strong>2. Alles zusammenrechnen:</strong></div>`;
+    html += `<div class="ex-step" style="margin-left: 16px; background: var(--accent-light);">
+      ${lineSums.join(' + ')} = <strong>${fmtMoney(sum)}</strong>
+    </div>`;
 
-    if (t.payCents != null) {
-      html += `
-        <div class="rmeta" style="margin-top: var(--s-1); background: var(--money-bg);">
-          <span style="font-size: var(--text-lg);">Du gibst:</span>
-          <span class="rmeta-total" style="color: var(--money)">${fmtMoney(t.payCents)}</span>
-        </div>
-        <div class="rmeta" style="margin-top: var(--s-1); background: var(--color-success-bg); border-color: var(--color-success);">
-          <span style="font-size: var(--text-lg);">Zurück:</span>
-          <span class="rmeta-total" style="color: var(--color-success)">${fmtMoney(t.answerCents)}</span>
-        </div>
-      `;
+    // Schritt 3: Bei Wechselgeld
+    if (t.type === 'change' && t.payCents != null) {
+      html += `<div class="ex-step"><strong>3. Wechselgeld berechnen:</strong></div>`;
+      html += `<div class="ex-step" style="margin-left: 16px; background: var(--money-bg);">
+        ${fmtMoney(t.payCents)} − ${fmtMoney(sum)} = <strong>${fmtMoney(t.answerCents)}</strong>
+        <small>Bezahlt minus Preis = Wechselgeld</small>
+      </div>`;
     }
 
-    html += `</div></div>`;
+    html += `</div>`;
 
     html += `<div class="ex-result">🎉 Antwort: ${fmtMoney(t.answerCents)}</div>`;
 
     if (t.type === 'change') {
-      html += `<div class="ex-tip">💡 Probe: Summe + Wechselgeld = Bezahlt<br>
-        ${fmtMoney(sum)} + ${fmtMoney(t.answerCents)} = ${fmtMoney(t.payCents)} ✓</div>`;
+      html += `<div class="ex-tip">💡 Probe: ${fmtMoney(sum)} + ${fmtMoney(t.answerCents)} = ${fmtMoney(t.payCents)} ✓</div>`;
     } else {
-      html += `<div class="ex-tip">💡 Tipp: Rechne erst jede Zeile (Anzahl × Preis), dann addiere alles zusammen.</div>`;
+      html += `<div class="ex-tip">💡 Tipp: Erst jede Zeile (Anzahl × Preis), dann alles addieren!</div>`;
     }
 
-    html += `</div>`;
     $('help-content').innerHTML = html;
     openModal('modal-help');
   };
@@ -1235,7 +1229,9 @@
     state.answered = false;
 
     $('task-title').textContent = state.currentTask.prompt;
-    $('task-sub').textContent = 'Tipp: Erst Zeilen, dann Summe (und ggf. Wechselgeld).';
+    $('task-sub').textContent = state.currentTask.type === 'total' 
+      ? 'Rechne erst jede Zeile, dann addiere alles.'
+      : 'Berechne erst die Summe, dann das Wechselgeld.';
 
     setReceipt(state.currentTask);
 
@@ -1280,8 +1276,8 @@
       const msgs = [
         'Richtig gerechnet! ⭐',
         'Super! Das stimmt. ⭐',
-        'Perfekt! Genau richtig. ⭐',
-        'Sehr gut! Das ist korrekt. ⭐'
+        'Perfekt! ⭐',
+        'Sehr gut! ⭐'
       ];
       showFeedback(msgs[rand(0, msgs.length - 1)], 'success');
       playCorrect();
@@ -1289,23 +1285,15 @@
       state.streak = 0;
       if (selectedIndex >= 0) buttons[selectedIndex].classList.add('incorrect');
 
-      const userAnswer = state.currentTask.optionsCents[selectedIndex];
-      const diff = Math.abs(userAnswer - state.currentTask.answerCents);
-      
-      let hint = '';
-      if (diff <= 100) hint = ' Du warst ganz nah dran!';
-      else if (userAnswer % 100 === 0 && state.currentTask.answerCents % 100 !== 0) {
-        hint = ' Vergiss die Cent nicht!';
-      }
-
-      showFeedback(`Fast!${hint} Richtig ist ${fmtMoney(state.currentTask.answerCents)}.`, 'error');
+      showFeedback(`Fast! Richtig ist ${fmtMoney(state.currentTask.answerCents)}.`, 'error');
       playIncorrect();
     }
 
+    // History
     const sum = state.currentTask.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
     const short = state.currentTask.type === 'change'
       ? `Wechselgeld aus ${fmtMoney(state.currentTask.payCents)}`
-      : `Summe ${fmtMoney(sum)}`;
+      : `Summe: ${state.currentTask.lines.length} Artikel`;
 
     state.history.push({
       correct: isCorrect,
@@ -1393,7 +1381,7 @@
   updateHistoryDots();
   $('snd').textContent = state.settings.sound ? '🔊' : '🔇';
   showFeedback('Wähle eine Klasse und starte.');
-  console.log('✅ Kiosk-Sachaufgaben v2.0 geladen (verbessert).');
+  console.log('✅ Kiosk-Sachaufgaben v3.0 geladen – keine trivialen Aufgaben mehr!');
 })();
 </script>
 </body>
