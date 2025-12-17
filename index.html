@@ -266,25 +266,26 @@
       color: var(--ink-secondary);
     }
 
+    /* === VERBESSERTE RECHNUNG === */
     .receipt{
       background: var(--bg-card);
-      border: 2px solid var(--ink-primary);
-      border-radius: var(--radius-sm);
-      padding: var(--s-2);
-      box-shadow: var(--shadow-subtle);
+      border: 3px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: var(--s-3);
+      box-shadow: 0 4px 12px rgba(74,124,145,.15);
     }
     .receipt-head{
       display:flex;
       align-items:center;
       justify-content: space-between;
       gap: var(--s-2);
-      margin-bottom: var(--s-1);
+      margin-bottom: var(--s-2);
     }
     .badge{
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
+      padding: 8px 12px;
       border-radius: 999px;
       border: 2px solid var(--ink-primary);
       background: var(--money-bg);
@@ -294,12 +295,26 @@
       text-transform: uppercase;
       color: var(--ink-primary);
       user-select: none;
+      white-space: nowrap;
+    }
+    .badge.type-sum{
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .badge.type-change{
+      background: var(--color-success-bg);
+      border-color: var(--color-success);
+      color: var(--color-success);
     }
     .receipt-lines{
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: var(--s-1);
+      gap: 10px;
+      margin-top: var(--s-2);
+      padding: var(--s-2);
+      background: var(--bg-muted);
+      border-radius: var(--radius-sm);
     }
     .rline{
       display:flex;
@@ -307,19 +322,34 @@
       justify-content: space-between;
       gap: var(--s-2);
       font-weight: 900;
+      padding: 6px 0;
     }
-    .rline .name{ color: var(--ink-primary); }
-    .rline .price{ color: var(--accent); font-variant-numeric: tabular-nums; }
+    .rline .name{ 
+      color: var(--ink-primary);
+      font-size: var(--text-md);
+    }
+    .rline .price{ 
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+      font-size: var(--text-lg);
+    }
     .rmeta{
-      margin-top: var(--s-1);
-      padding-top: var(--s-1);
-      border-top: 2px dashed var(--bg-muted);
-      color: var(--ink-secondary);
+      margin-top: var(--s-2);
+      padding: var(--s-2);
+      border-top: 3px solid var(--ink-primary);
+      background: var(--accent-light);
+      border-radius: var(--radius-sm);
+      color: var(--ink-primary);
       font-weight: 900;
-      font-size: var(--text-xs);
+      font-size: var(--text-md);
       display:flex;
       justify-content: space-between;
       gap: var(--s-2);
+    }
+    .rmeta-total{
+      font-size: var(--text-xl);
+      color: var(--accent);
+      font-weight: 900;
     }
 
     .answers{
@@ -334,13 +364,16 @@
       border-radius: var(--radius-md);
       background: var(--bg-card);
       font-family: var(--font);
-      font-size: 1.2rem;
+      font-size: clamp(1.2rem, 5vw, 1.5rem);
       font-weight: 900;
       color: var(--ink-primary);
       cursor: pointer;
       transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
-      min-height: 64px;
+      min-height: 72px;
       font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .answer-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-soft); background: var(--accent-light); }
     .answer-btn:active{ transform: scale(0.98); box-shadow: none; }
@@ -527,8 +560,12 @@
       .pill{ padding: 8px 10px; min-height: 44px; }
       .pill .val{ font-size: var(--text-xs); }
       .grade-btn{ min-height: 48px; font-size: var(--text-md); }
-      .answer-btn{ font-size: 1.05rem; min-height: 56px; }
+      .answer-btn{ font-size: 1.1rem; min-height: 64px; padding: var(--s-2); }
       .btn{ min-height: 48px; font-size: var(--text-sm); }
+      .receipt{ padding: var(--s-2); }
+      .rline .name{ font-size: var(--text-sm); }
+      .rline .price{ font-size: var(--text-md); }
+      .badge{ font-size: 10px; padding: 6px 10px; }
     }
   </style>
 </head>
@@ -576,7 +613,7 @@
         <section class="card-section">
           <div class="task-area">
             <div>
-              <div class="task-title" id="task-title">Tippe auf „Neue Aufgabe“</div>
+              <div class="task-title" id="task-title">Tippe auf „Neue Aufgabe"</div>
               <div class="task-sub" id="task-sub">Wir rechnen mit Preisen wie im Kiosk.</div>
             </div>
 
@@ -810,10 +847,7 @@
   };
 
   // === TASK TYPES ===
-  // Wir nutzen Cents integer, kein Float.
-  // task = { type, prompt, lines:[{qty,name,price}], payCents?, answerCents, optionsCents[], explainSteps[] }
   const createTask = (grade) => {
-    // Gewichtung: 70% Kern, 30% Wiederholung
     const coreTypes = ['total', 'change'];
     const reviewTypes = ['total_easy'];
 
@@ -828,7 +862,6 @@
   };
 
   const makeTotalTask = (grade, easy) => {
-    // Anzahl Positionen: easy = 1–2, sonst 2–3
     const positions = easy ? rand(1, 2) : rand(2, 3);
 
     const used = new Set();
@@ -851,7 +884,6 @@
       lines.push({ qty, name: it.name, price: it.price });
     }
 
-    // Vereinfachung Kl.1: bei easy möglichst glatte 10/20/50 Cent
     if (grade === 1 && easy) {
       lines.forEach(l => {
         const options = [50, 100, 150].filter(v => v <= 150);
@@ -890,7 +922,6 @@
   };
 
   const makeChangeTask = (grade) => {
-    // 1–3 Positionen, dann bezahlen mit Schein/Münzen und Wechselgeld
     const positions = grade === 1 ? 1 : rand(1, 3);
     const used = new Set();
     const lines = [];
@@ -910,21 +941,16 @@
 
     let sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
 
-    // Bezahlen: so wählen, dass Wechselgeld positiv und "schön" ist
-    const pays = grade === 1 ? [200, 500, 1000] // 2€, 5€, 10€
+    const pays = grade === 1 ? [200, 500, 1000]
                : grade === 2 ? [500, 1000, 2000]
                : grade === 3 ? [1000, 2000, 5000]
                : [1000, 2000, 5000, 10000];
 
     let pay = pays[rand(0, pays.length - 1)];
-    // Wenn Summe zu groß: Schein erhöhen
     for (let i = 0; i < 6 && pay <= sum; i++) pay = pays[Math.min(pays.length - 1, rand(0, pays.length - 1))];
     if (pay <= sum) pay = sum + (grade <= 2 ? 200 : 500);
 
-    // Bei Kl.1: lieber glatte Wechselgeldbeträge
     if (grade === 1) {
-      // Summe auf Vielfache von 10 Cent runden (ohne den Sinn zu zerstören)
-      // (Wir ändern nicht die Preise, sondern wählen ggf. pay)
       pay = [200, 500, 1000].find(p => p > sum) || (sum + 200);
     }
 
@@ -982,7 +1008,6 @@
     };
   };
 
-  // Distraktoren: typische Fehler (Cent vergessen, falsches Minus, eine Zeile nicht multipliziert, Rundung)
   const makeOptions = (answerCents, ctx) => {
     const opts = new Set([answerCents]);
 
@@ -990,46 +1015,38 @@
       if (Number.isFinite(v) && v >= 0 && v <= 20000) opts.add(Math.round(v));
     };
 
-    // Fehler 1: +/- 1€ (oder 50ct) je nach Klassenstufe
     const bump = state.grade <= 2 ? 50 : 100;
     add(answerCents + bump);
     add(answerCents - bump);
 
-    // Fehler 2: Cent ignoriert (auf Euro runden)
     const euroOnly = Math.round((Math.floor(answerCents / 100) * 100));
     add(euroOnly);
     add(euroOnly + 100);
 
-    // Fehler 3: Rechenzeichen vertauscht bei Wechselgeld (Summe statt Wechselgeld)
     if (ctx.type === 'change' && ctx.payCents != null) {
-      const sum = ctx.payCents - answerCents; // tatsächliche Summe
-      add(sum);                               // falsche Antwort: Summe statt Wechselgeld
-      add(ctx.payCents + sum);                // komplett falsch (zu groß), wird meist rausfallen
+      const sum = ctx.payCents - answerCents;
+      add(sum);
+      add(ctx.payCents + sum);
     }
 
-    // Fehler 4: Bei Summe: eine Position qty nicht multipliziert
     if (ctx.type === 'total' && Array.isArray(ctx.lines) && ctx.lines.length > 0) {
       const l = ctx.lines[rand(0, ctx.lines.length - 1)];
-      const wrong = answerCents - (l.qty * l.price) + l.price; // statt qty*price nur price
+      const wrong = answerCents - (l.qty * l.price) + l.price;
       add(wrong);
     }
 
-    // Streuung um Antwort
     while (opts.size < 4) {
       const delta = rand(-6, 6) * (state.grade <= 2 ? 25 : 50);
       add(answerCents + delta);
     }
 
     const arr = Array.from(opts).slice(0, 4);
-    // Shuffle
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    // Sicherstellen: korrekt enthalten
     if (!arr.includes(answerCents)) arr[0] = answerCents;
 
-    // Neu korrekt indexen durch erneutes Shuffle falls nötig
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -1073,7 +1090,10 @@
       return;
     }
 
-    $('task-tag').textContent = task.taskTag;
+    const badgeEl = $('task-tag');
+    badgeEl.textContent = task.taskTag;
+    badgeEl.className = 'badge ' + (task.type === 'change' ? 'type-change' : 'type-sum');
+    
     receipt.style.display = 'block';
 
     linesEl.innerHTML = task.lines.map(l => {
@@ -1084,9 +1104,16 @@
 
     const sum = task.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
     metaEl.innerHTML = `
-      <span>Summe: <span style="color: var(--ink-primary)">${fmtMoney(sum)}</span></span>
-      ${task.payCents != null ? `<span>Du gibst: <span style="color: var(--ink-primary)">${fmtMoney(task.payCents)}</span></span>` : `<span>–</span>`}
+      <span>Summe:</span>
+      <span class="rmeta-total">${fmtMoney(sum)}</span>
     `;
+    
+    if (task.payCents != null) {
+      metaEl.innerHTML += `
+        <span style="margin-top: 8px;">Du gibst:</span>
+        <span class="rmeta-total" style="color: var(--money)">${fmtMoney(task.payCents)}</span>
+      `;
+    }
   };
 
   // === MODALS ===
@@ -1098,10 +1125,26 @@
 
     let html = `
       <div class="explain">
-        <div class="ex-title">⭐ Punkte & Treffer</div>
-        <div class="ex-step">Punkte: <strong>${state.coins}</strong><small>+1 Punkt pro richtiger Aufgabe</small></div>
-        <div class="ex-step">Aufgaben: <strong>${state.total}</strong><small>Richtig: ${state.score} (${accuracy}%)</small></div>
-        <div class="ex-step">Beste Serie: <strong>${state.maxStreak}</strong><small>Aktuell: ${state.streak}</small></div>
+        <div class="ex-title">💰 Dein Geld-Konto</div>
+        <div class="ex-step" style="background: var(--money-bg); border-color: var(--money);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Gesamt verdient:</span>
+            <span style="font-size: var(--text-2xl); color: var(--money);">⭐ ${state.coins}</span>
+          </div>
+          <small>+1 Punkt pro richtiger Aufgabe</small>
+        </div>
+      </div>
+
+      <div class="explain" style="margin-top: var(--s-2);">
+        <div class="ex-title">📊 Statistik</div>
+        <div class="ex-step">
+          Aufgaben: <strong>${state.total}</strong>
+          <small>Richtig: ${state.score} von ${state.total} (${accuracy}%)</small>
+        </div>
+        <div class="ex-step">
+          Beste Serie: <strong>${state.maxStreak}</strong>
+          <small>Aktuell: ${state.streak} hintereinander richtig</small>
+        </div>
       </div>
     `;
 
@@ -1125,20 +1168,60 @@
     if (!state.currentTask) return;
 
     const t = state.currentTask;
-    let html = `<div class="explain"><div class="ex-title">📝 Schritt für Schritt</div>`;
+    let html = `<div class="explain">
+      <div class="ex-title">📝 Schritt für Schritt</div>
+      <div class="receipt">
+        <div class="receipt-head">
+          <div class="badge">🧾 Dein Einkauf</div>
+          <div class="badge ${t.type === 'change' ? 'type-change' : 'type-sum'}">${t.taskTag}</div>
+        </div>
+        <div class="receipt-lines">`;
 
-    t.explainSteps.forEach(s => {
-      html += `<div class="ex-step">${s.title}: <strong>${s.math}</strong><small>${s.note}</small></div>`;
+    t.lines.forEach((l) => {
+      const lineSum = l.qty * l.price;
+      html += `
+        <div class="rline" style="background: var(--color-success-bg); padding: 8px; border-radius: 8px; margin-bottom: 4px;">
+          <span class="name">${l.qty}× ${l.name}</span>
+          <span class="price">${fmtMoney(l.price)}</span>
+        </div>
+        <div style="text-align: right; font-size: var(--text-sm); color: var(--ink-secondary); margin-top: -2px; margin-bottom: 8px;">
+          → ${l.qty} × ${fmtMoney(l.price)} = <strong style="color: var(--color-success)">${fmtMoney(lineSum)}</strong>
+        </div>
+      `;
     });
+
+    html += `</div>`;
+
+    const sum = t.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
+    html += `
+      <div class="rmeta">
+        <span style="font-size: var(--text-lg);">Summe:</span>
+        <span class="rmeta-total">${fmtMoney(sum)}</span>
+      </div>
+    `;
+
+    if (t.payCents != null) {
+      html += `
+        <div class="rmeta" style="margin-top: var(--s-1); background: var(--money-bg);">
+          <span style="font-size: var(--text-lg);">Du gibst:</span>
+          <span class="rmeta-total" style="color: var(--money)">${fmtMoney(t.payCents)}</span>
+        </div>
+        <div class="rmeta" style="margin-top: var(--s-1); background: var(--color-success-bg); border-color: var(--color-success);">
+          <span style="font-size: var(--text-lg);">Zurück:</span>
+          <span class="rmeta-total" style="color: var(--color-success)">${fmtMoney(t.answerCents)}</span>
+        </div>
+      `;
+    }
+
+    html += `</div></div>`;
 
     html += `<div class="ex-result">🎉 Antwort: ${fmtMoney(t.answerCents)}</div>`;
 
-    // Tipp: Probe / Plausibilität
     if (t.type === 'change') {
-      const sum = t.payCents - t.answerCents;
-      html += `<div class="ex-tip">💡 Probe: Summe + Wechselgeld = ${fmtMoney(sum)} + ${fmtMoney(t.answerCents)} = ${fmtMoney(t.payCents)}</div>`;
+      html += `<div class="ex-tip">💡 Probe: Summe + Wechselgeld = Bezahlt<br>
+        ${fmtMoney(sum)} + ${fmtMoney(t.answerCents)} = ${fmtMoney(t.payCents)} ✓</div>`;
     } else {
-      html += `<div class="ex-tip">💡 Tipp: Rechne erst jede Zeile, dann addiere alles.</div>`;
+      html += `<div class="ex-tip">💡 Tipp: Rechne erst jede Zeile (Anzahl × Preis), dann addiere alles zusammen.</div>`;
     }
 
     html += `</div>`;
@@ -1191,21 +1274,34 @@
       state.streak++;
       state.maxStreak = Math.max(state.maxStreak, state.streak);
 
-      // Coins +1
       state.coins++;
       setStr(LS.coins, state.coins);
 
-      showFeedback('Richtig! Sehr gut – du bekommst ⭐ 1 Punkt.', 'success');
+      const msgs = [
+        'Richtig gerechnet! ⭐',
+        'Super! Das stimmt. ⭐',
+        'Perfekt! Genau richtig. ⭐',
+        'Sehr gut! Das ist korrekt. ⭐'
+      ];
+      showFeedback(msgs[rand(0, msgs.length - 1)], 'success');
       playCorrect();
     } else {
       state.streak = 0;
       if (selectedIndex >= 0) buttons[selectedIndex].classList.add('incorrect');
 
-      showFeedback(`Fast! Richtig ist ${fmtMoney(state.currentTask.answerCents)}.`, 'error');
+      const userAnswer = state.currentTask.optionsCents[selectedIndex];
+      const diff = Math.abs(userAnswer - state.currentTask.answerCents);
+      
+      let hint = '';
+      if (diff <= 100) hint = ' Du warst ganz nah dran!';
+      else if (userAnswer % 100 === 0 && state.currentTask.answerCents % 100 !== 0) {
+        hint = ' Vergiss die Cent nicht!';
+      }
+
+      showFeedback(`Fast!${hint} Richtig ist ${fmtMoney(state.currentTask.answerCents)}.`, 'error');
       playIncorrect();
     }
 
-    // History (kurz)
     const sum = state.currentTask.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
     const short = state.currentTask.type === 'change'
       ? `Wechselgeld aus ${fmtMoney(state.currentTask.payCents)}`
@@ -1259,7 +1355,6 @@
     setTimeout(() => el.style.transform = '', 160);
   });
 
-  // Modal close
   ['help', 'settings', 'stats'].forEach(name => {
     $(`ok-${name}`).addEventListener('click', () => closeModal(`modal-${name}`));
     $(`modal-${name}`).addEventListener('click', (e) => {
@@ -1267,7 +1362,6 @@
     });
   });
 
-  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeModal('modal-help'); closeModal('modal-settings'); closeModal('modal-stats');
@@ -1299,7 +1393,7 @@
   updateHistoryDots();
   $('snd').textContent = state.settings.sound ? '🔊' : '🔇';
   showFeedback('Wähle eine Klasse und starte.');
-  console.log('✅ Kiosk-Sachaufgaben geladen.');
+  console.log('✅ Kiosk-Sachaufgaben v2.0 geladen (verbessert).');
 })();
 </script>
 </body>
