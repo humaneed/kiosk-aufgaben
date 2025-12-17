@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#4A7C91" />
+  <meta name="description" content="Kiosk-Sachaufgaben – Geld & Textaufgaben (Grundschule)" />
+  <title>Kiosk-Sachaufgaben – Kidsneed</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================
+       KIDSNEED DESIGN SYSTEM (kompatibel)
+       ============================================ */
+    :root {
+      --s-1: 8px; --s-2: 16px; --s-3: 24px; --s-4: 32px; --s-5: 48px;
+
+      --radius-sm: 12px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-xl: 28px;
+
+      --shadow-soft: 0 2px 10px rgba(45,42,38,.10);
+      --shadow-subtle: 0 1px 3px rgba(45,42,38,.06);
+
+      --bg-canvas: #F5F0E8;
+      --bg-card: #FFFFFF;
+      --bg-muted: #EDE8DC;
+
+      --ink-primary: #2D2A26;
+      --ink-secondary: #6B665C;
+      --ink-light: #9C9588;
+
+      /* Mathe-Akzent (wie Kidsneed) */
+      --accent: #4A7C91;
+      --accent-dark: #3A6275;
+      --accent-light: rgba(74,124,145,.12);
+
+      /* Warmes Money-Highlight */
+      --money: #D4A574;
+      --money-bg: rgba(212,165,116,.16);
+
+      --color-success: #7BA08A;
+      --color-success-bg: rgba(123,160,138,.15);
+      --color-error: #C4726C;
+      --color-error-bg: rgba(196,114,108,.15);
+      --color-warn: #D4A574;
+      --color-warn-bg: rgba(212,165,116,.15);
+
+      --text-2xl: 24px;
+      --text-xl: 20px;
+      --text-lg: 18px;
+      --text-md: 16px;
+      --text-sm: 14px;
+      --text-xs: 12px;
+
+      --motion-fast: 150ms;
+      --motion-base: 260ms;
+      --ease-out: cubic-bezier(0.33, 1, 0.68, 1);
+
+      --app-max-w: 560px;
+      --font: 'Nunito', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      background: var(--bg-canvas);
+      color: var(--ink-primary);
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: var(--text-md);
+      line-height: 1.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    *:focus-visible{
+      outline: 3px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: var(--radius-sm);
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *, *::before, *::after{ transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+
+    .app-frame{
+      width: 100%;
+      height: 100%;
+      background: var(--bg-card);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    @media (min-width: 520px){
+      body{ padding: var(--s-3); }
+      .app-frame{
+        max-width: var(--app-max-w);
+        height: 94dvh;
+        max-height: 920px;
+        border: 3px solid var(--ink-primary);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-subtle);
+      }
+    }
+
+    header{
+      height: 72px;
+      padding: 0 var(--s-3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--s-2);
+      border-bottom: 3px solid var(--ink-primary);
+      background: var(--bg-card);
+      flex: 0 0 auto;
+    }
+
+    .brand{ display:flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .brand-title{
+      font-size: var(--text-xl);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      display: flex;
+      align-items: center;
+      gap: var(--s-1);
+    }
+    .brand-subtitle{
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--ink-secondary);
+    }
+
+    .header-stats{ display:flex; gap: var(--s-1); align-items: center; }
+
+    .pill{
+      min-height: 48px;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--ink-primary);
+      background: var(--bg-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+      cursor: pointer;
+      transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+    }
+    .pill:hover{ box-shadow: var(--shadow-soft); transform: translateY(-1px); }
+    .pill:active{ transform: scale(0.98); box-shadow: none; }
+    .pill .icon{ font-size: 16px; }
+    .pill .val{ font-weight: 900; font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
+
+    .viewport{
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: var(--s-3);
+      background:
+        radial-gradient(1200px 340px at 50% 0%, rgba(74,124,145,.08), transparent 60%),
+        var(--bg-card);
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .card{
+      border: 3px solid var(--ink-primary);
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-subtle);
+      margin-bottom: var(--s-3);
+      animation: fadeIn var(--motion-base) var(--ease-out);
+    }
+    .card-section{ padding: var(--s-3); }
+    .card-section + .card-section{ border-top: 3px solid var(--ink-primary); }
+
+    .section-label{
+      font-size: var(--text-xs);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.10em;
+      color: var(--ink-secondary);
+      margin-bottom: var(--s-2);
+    }
+
+    .grade-grid{
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-1);
+    }
+    .grade-btn{
+      min-height: 52px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--ink-primary);
+      background: var(--bg-muted);
+      font-family: var(--font);
+      font-weight: 900;
+      font-size: var(--text-lg);
+      color: var(--ink-primary);
+      cursor: pointer;
+      transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+    }
+    .grade-btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+    .grade-btn:active{ transform: scale(0.98); box-shadow: none; }
+    .grade-btn.selected{ background: var(--accent); color: white; border-color: var(--accent-dark); }
+
+    .icon-row{
+      display: flex;
+      gap: var(--s-1);
+      margin-top: var(--s-2);
+      justify-content: flex-end;
+    }
+    .icon-btn{
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--ink-primary);
+      background: var(--bg-muted);
+      cursor: pointer;
+      font-size: 20px;
+      color: var(--ink-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+    }
+    .icon-btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+    .icon-btn:active{ transform: scale(0.98); box-shadow: none; }
+
+    .task-area{
+      background: var(--bg-muted);
+      border: 3px solid var(--ink-primary);
+      border-radius: var(--radius-md);
+      padding: var(--s-3);
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      justify-content: center;
+    }
+
+    .task-title{
+      font-size: clamp(1.1rem, 4vw, 1.25rem);
+      font-weight: 900;
+      letter-spacing: -0.01em;
+      color: var(--ink-primary);
+    }
+    .task-sub{
+      font-size: var(--text-sm);
+      font-weight: 800;
+      color: var(--ink-secondary);
+    }
+
+    .receipt{
+      background: var(--bg-card);
+      border: 2px solid var(--ink-primary);
+      border-radius: var(--radius-sm);
+      padding: var(--s-2);
+      box-shadow: var(--shadow-subtle);
+    }
+    .receipt-head{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: var(--s-2);
+      margin-bottom: var(--s-1);
+    }
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 2px solid var(--ink-primary);
+      background: var(--money-bg);
+      font-weight: 900;
+      font-size: var(--text-xs);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-primary);
+      user-select: none;
+    }
+    .receipt-lines{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: var(--s-1);
+    }
+    .rline{
+      display:flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--s-2);
+      font-weight: 900;
+    }
+    .rline .name{ color: var(--ink-primary); }
+    .rline .price{ color: var(--accent); font-variant-numeric: tabular-nums; }
+    .rmeta{
+      margin-top: var(--s-1);
+      padding-top: var(--s-1);
+      border-top: 2px dashed var(--bg-muted);
+      color: var(--ink-secondary);
+      font-weight: 900;
+      font-size: var(--text-xs);
+      display:flex;
+      justify-content: space-between;
+      gap: var(--s-2);
+    }
+
+    .answers{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--s-2);
+      margin-top: var(--s-3);
+    }
+    .answer-btn{
+      padding: var(--s-3);
+      border: 3px solid var(--ink-primary);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      font-family: var(--font);
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--ink-primary);
+      cursor: pointer;
+      transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out);
+      min-height: 64px;
+      font-variant-numeric: tabular-nums;
+    }
+    .answer-btn:hover{ transform: translateY(-2px); box-shadow: var(--shadow-soft); background: var(--accent-light); }
+    .answer-btn:active{ transform: scale(0.98); box-shadow: none; }
+
+    .answer-btn.correct{ background: var(--color-success); border-color: var(--color-success); color: white; }
+    .answer-btn.incorrect{ background: var(--color-error); border-color: var(--color-error); color: white; }
+
+    .feedback{
+      margin-top: var(--s-3);
+      padding: var(--s-2);
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--ink-primary);
+      background: var(--bg-muted);
+      font-weight: 900;
+      font-size: var(--text-sm);
+      color: var(--ink-secondary);
+      display:flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .feedback .ficon{ font-size: 18px; line-height: 1; }
+    .feedback.success{ background: var(--color-success-bg); border-color: var(--color-success); color: #2D5A3A; }
+    .feedback.error{ background: var(--color-error-bg); border-color: var(--color-error); color: #6B3A32; }
+
+    .history-dots{
+      display:flex;
+      gap: 6px;
+      margin-top: var(--s-2);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .dot{
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid var(--ink-primary);
+      display:flex; align-items:center; justify-content:center;
+      font-size: 12px; font-weight: 900;
+    }
+    .dot.correct{ background: var(--color-success-bg); border-color: var(--color-success); color: var(--color-success); }
+    .dot.incorrect{ background: var(--color-error-bg); border-color: var(--color-error); color: var(--color-error); }
+
+    .btn{
+      min-height: 52px;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--ink-primary);
+      background: var(--bg-card);
+      color: var(--ink-secondary);
+      font-family: var(--font);
+      font-weight: 900;
+      font-size: var(--text-md);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform var(--motion-fast) var(--ease-out), box-shadow var(--motion-fast) var(--ease-out), filter var(--motion-fast) var(--ease-out);
+      user-select: none;
+      text-decoration: none;
+    }
+    .btn:hover{ transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+    .btn:active{ transform: translateY(1px); box-shadow: none; }
+    .btn.primary{ background: var(--accent); color: white; border-color: var(--accent-dark); }
+    .btn.primary:hover{ filter: brightness(1.05); }
+    .btn:disabled{ opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+    .actions{
+      display:flex;
+      gap: var(--s-2);
+      margin-top: var(--s-3);
+    }
+    .actions .btn{ flex: 1; }
+
+    footer{
+      flex: 0 0 auto;
+      padding: var(--s-2) var(--s-3);
+      padding-bottom: max(var(--s-2), env(safe-area-inset-bottom));
+      background: var(--bg-card);
+      border-top: 3px solid var(--ink-primary);
+      display:flex;
+      gap: var(--s-2);
+    }
+    footer .btn{ flex: 1; }
+
+    .overlay{
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.26);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: var(--s-3);
+      z-index: 100;
+    }
+    .overlay.open{ display:flex; }
+
+    .sheet{
+      width:100%;
+      max-width: 560px;
+      max-height: 85vh;
+      overflow-y:auto;
+      border: 3px solid var(--ink-primary);
+      border-radius: var(--radius-xl);
+      background: var(--bg-card);
+      box-shadow: var(--shadow-soft);
+      padding: var(--s-3);
+      animation: slideUp var(--motion-base) var(--ease-out);
+    }
+    .sheet h2{
+      margin: 0 0 var(--s-1);
+      font-size: var(--text-xl);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-align: center;
+    }
+    .sheet > p{
+      margin: 0 0 var(--s-3);
+      color: var(--ink-secondary);
+      font-weight: 800;
+      font-size: var(--text-sm);
+      text-align: center;
+    }
+    .sheet-actions{
+      display:flex;
+      gap: var(--s-2);
+      margin-top: var(--s-3);
+    }
+    .sheet-actions .btn{ flex:1; }
+
+    .explain{
+      background: var(--bg-muted);
+      border: 2px solid var(--ink-primary);
+      border-radius: var(--radius-md);
+      padding: var(--s-3);
+    }
+    .ex-title{
+      font-weight: 900;
+      font-size: var(--text-sm);
+      color: var(--accent);
+      margin-bottom: var(--s-2);
+      display:flex;
+      align-items:center;
+      gap: var(--s-1);
+    }
+    .ex-step{
+      background: var(--bg-card);
+      border: 2px solid var(--ink-primary);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+    .ex-step small{ display:block; color: var(--ink-secondary); font-weight: 900; font-size: var(--text-xs); margin-top: 4px; }
+    .ex-result{
+      margin-top: var(--s-2);
+      background: var(--accent);
+      color: white;
+      padding: var(--s-2);
+      border-radius: var(--radius-md);
+      border: 2px solid var(--accent-dark);
+      text-align:center;
+      font-weight: 900;
+      font-size: var(--text-lg);
+    }
+    .ex-tip{
+      margin-top: var(--s-2);
+      background: var(--color-warn-bg);
+      border: 2px solid var(--color-warn);
+      border-radius: var(--radius-sm);
+      padding: var(--s-2);
+      font-weight: 900;
+      color: #6B5A32;
+      font-size: var(--text-sm);
+    }
+
+    @keyframes fadeIn{ from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
+    @keyframes slideUp{ from{ opacity:0; transform: translateY(30px);} to{ opacity:1; transform: translateY(0);} }
+
+    @media (max-width: 400px){
+      header{ padding: 0 var(--s-2); }
+      .viewport{ padding: var(--s-2); }
+      footer{ padding: var(--s-2); }
+      .brand-title{ font-size: var(--text-lg); }
+      .pill{ padding: 8px 10px; min-height: 44px; }
+      .pill .val{ font-size: var(--text-xs); }
+      .grade-btn{ min-height: 48px; font-size: var(--text-md); }
+      .answer-btn{ font-size: 1.05rem; min-height: 56px; }
+      .btn{ min-height: 48px; font-size: var(--text-sm); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-frame">
+    <header>
+      <div class="brand">
+        <div class="brand-title">🧺 Kiosk-Aufgaben</div>
+        <div class="brand-subtitle">Geld & Sachaufgaben · Kidsneed</div>
+      </div>
+
+      <div class="header-stats">
+        <div class="pill" id="coins-pill" role="button" tabindex="0" aria-label="Punkte">
+          <span class="icon">⭐</span>
+          <span class="val" id="coins">0</span>
+        </div>
+        <div class="pill" id="stats-pill" role="button" tabindex="0" aria-label="Richtig von Gesamt">
+          <span class="icon">✓</span>
+          <span class="val" id="score">0</span>/<span class="val" id="total">0</span>
+        </div>
+        <div class="pill" aria-label="Serie">
+          <span class="icon">🔥</span>
+          <span class="val" id="streak">0</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="viewport">
+      <div class="card">
+        <section class="card-section">
+          <div class="section-label">Klassenstufe</div>
+          <div class="grade-grid" id="grades">
+            <button class="grade-btn" data-g="1" type="button">1</button>
+            <button class="grade-btn" data-g="2" type="button">2</button>
+            <button class="grade-btn" data-g="3" type="button">3</button>
+            <button class="grade-btn" data-g="4" type="button">4</button>
+          </div>
+          <div class="icon-row">
+            <button class="icon-btn" id="snd" aria-label="Ton">🔊</button>
+            <button class="icon-btn" id="settings-btn" aria-label="Einstellungen">⚙️</button>
+          </div>
+        </section>
+
+        <section class="card-section">
+          <div class="task-area">
+            <div>
+              <div class="task-title" id="task-title">Tippe auf „Neue Aufgabe“</div>
+              <div class="task-sub" id="task-sub">Wir rechnen mit Preisen wie im Kiosk.</div>
+            </div>
+
+            <div class="receipt" id="receipt" style="display:none;">
+              <div class="receipt-head">
+                <div class="badge">🧾 Einkauf</div>
+                <div class="badge" id="task-tag">…</div>
+              </div>
+              <div class="receipt-lines" id="receipt-lines"></div>
+              <div class="rmeta" id="receipt-meta"></div>
+            </div>
+          </div>
+
+          <div class="answers" id="answers"></div>
+
+          <div class="feedback" id="feedback">
+            <span class="ficon">📝</span>
+            <span>Wähle eine Klasse und starte.</span>
+          </div>
+
+          <div class="history-dots" id="history-dots"></div>
+        </section>
+
+        <section class="card-section">
+          <div class="actions">
+            <button class="btn" id="help-btn" disabled type="button">💡 Erklärung</button>
+            <button class="btn primary" id="start-btn" type="button">Neue Aufgabe</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer>
+      <a class="btn" href="https://humaneed.github.io/kidsneed/" aria-label="Zurück zum Hub">← Hub</a>
+      <button class="btn" id="stats-btn" type="button">📊 Statistik</button>
+    </footer>
+
+    <!-- MODAL: Erklärung -->
+    <div class="overlay" id="modal-help">
+      <div class="sheet">
+        <h2>💡 Erklärung</h2>
+        <div id="help-content"></div>
+        <div class="sheet-actions">
+          <button class="btn primary" id="ok-help" type="button">Verstanden</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Einstellungen -->
+    <div class="overlay" id="modal-settings">
+      <div class="sheet">
+        <h2>⚙️ Einstellungen</h2>
+        <p>Klein, ruhig, kindgerecht. (Tastatur: 1–4 Antwort · Enter neue Aufgabe · E Erklärung)</p>
+
+        <div class="explain" style="margin-bottom: var(--s-2);">
+          <div class="ex-title">🧠 Schwierigkeits-Regel</div>
+          <div class="ex-step">70% Kern: Geld rechnen (Summe/Wechselgeld) · 30% Wiederholung (leichter)</div>
+          <div class="ex-step">Typische Fehler-Antworten sind dabei (z.B. Cent vergessen).</div>
+        </div>
+
+        <div class="explain">
+          <div class="ex-title">🔊 Ton</div>
+          <div class="actions" style="margin-top: 0;">
+            <button class="btn" id="toggle-sound" type="button">Ton an/aus</button>
+            <button class="btn primary" id="ok-settings" type="button">Fertig</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: Statistik -->
+    <div class="overlay" id="modal-stats">
+      <div class="sheet">
+        <h2>📊 Deine Statistiken</h2>
+        <div id="stats-content"></div>
+        <div class="sheet-actions">
+          <button class="btn primary" id="ok-stats" type="button">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+(() => {
+  'use strict';
+
+  const $ = (id) => document.getElementById(id);
+
+  const LS = {
+    coins: 'kidsneed_coins',
+    grade: 'kidsneed_grade',
+    kiosk: 'kidsneed_kiosk'
+  };
+
+  const clampGrade = (g) => {
+    const n = parseInt(g, 10);
+    return [1,2,3,4].includes(n) ? n : 1;
+  };
+
+  const getInt = (key, fallback = 0) => {
+    try {
+      const v = localStorage.getItem(key);
+      const n = v ? parseInt(v, 10) : fallback;
+      return Number.isFinite(n) ? n : fallback;
+    } catch { return fallback; }
+  };
+
+  const setStr = (key, val) => { try { localStorage.setItem(key, String(val)); } catch {} };
+
+  const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+  // Geldformat (cents -> "2,50 €")
+  const fmtMoney = (cents) => {
+    const sign = cents < 0 ? '-' : '';
+    const v = Math.abs(cents);
+    const eur = Math.floor(v / 100);
+    const ct = v % 100;
+    return sign + eur + ',' + String(ct).padStart(2,'0') + ' €';
+  };
+
+  // === STATE ===
+  const state = {
+    grade: 1,
+    coins: 0,
+    score: 0,
+    total: 0,
+    streak: 0,
+    maxStreak: 0,
+    history: [],
+    answered: false,
+    currentTask: null,
+    settings: { sound: true }
+  };
+
+  const saveState = () => {
+    try {
+      localStorage.setItem(LS.kiosk, JSON.stringify({
+        score: state.score,
+        total: state.total,
+        streak: state.streak,
+        maxStreak: state.maxStreak,
+        history: state.history.slice(-20),
+        settings: state.settings
+      }));
+    } catch {}
+  };
+
+  const loadState = () => {
+    state.grade = clampGrade(getInt(LS.grade, 1));
+    state.coins = getInt(LS.coins, 0);
+
+    try {
+      const saved = JSON.parse(localStorage.getItem(LS.kiosk));
+      if (saved) {
+        state.score = saved.score || 0;
+        state.total = saved.total || 0;
+        state.streak = saved.streak || 0;
+        state.maxStreak = saved.maxStreak || 0;
+        state.history = saved.history || [];
+        state.settings = { ...state.settings, ...saved.settings };
+      }
+    } catch {}
+  };
+
+  // === SOUND (simple beeps) ===
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const playBeep = (frequency, duration, type = 'sine') => {
+    if (!state.settings.sound) return;
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.type = type;
+    osc.frequency.value = frequency;
+
+    gain.gain.setValueAtTime(0.28, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+    osc.start(audioCtx.currentTime);
+    osc.stop(audioCtx.currentTime + duration);
+  };
+
+  const playCorrect = () => { playBeep(523, 0.12); setTimeout(() => playBeep(659, 0.15), 100); };
+  const playIncorrect = () => playBeep(294, 0.20, 'triangle');
+  const playClick = () => playBeep(880, 0.05);
+
+  // === ITEMS (Preise in Cent) ===
+  const ITEM_POOLS = {
+    1: [
+      { n: 'Apfel', c: [50, 100, 150] },
+      { n: 'Banane', c: [30, 60, 90] },
+      { n: 'Brötchen', c: [40, 80, 120] },
+      { n: 'Saft', c: [100, 150, 200] },
+      { n: 'Keks', c: [20, 50, 70] },
+      { n: 'Sticker', c: [50, 100] }
+    ],
+    2: [
+      { n: 'Schokoriegel', c: [80, 120, 150] },
+      { n: 'Wasser', c: [70, 100, 130] },
+      { n: 'Apfelschorle', c: [120, 150, 180] },
+      { n: 'Butterkeks', c: [90, 110, 140] },
+      { n: 'Bleistift', c: [50, 80, 100] },
+      { n: 'Radiergummi', c: [60, 90, 120] }
+    ],
+    3: [
+      { n: 'Müsliriegel', c: [95, 125, 165] },
+      { n: 'Sandwich', c: [220, 250, 280] },
+      { n: 'Saftbox', c: [145, 175, 205] },
+      { n: 'Notizheft', c: [180, 220, 260] },
+      { n: 'Marker', c: [150, 200, 250] },
+      { n: 'Fruchtmix', c: [160, 210, 260] }
+    ],
+    4: [
+      { n: 'Wrap', c: [290, 340, 390] },
+      { n: 'Smoothie', c: [250, 300, 350] },
+      { n: 'Kakao', c: [175, 225, 275] },
+      { n: 'Mini-Spiel', c: [399, 449, 499] },
+      { n: 'Buchzeichen', c: [120, 170, 220] },
+      { n: 'Sticker-Set', c: [199, 249, 299] }
+    ]
+  };
+
+  const pickItem = (grade) => {
+    const pool = ITEM_POOLS[grade];
+    const it = pool[rand(0, pool.length - 1)];
+    const cents = it.c[rand(0, it.c.length - 1)];
+    return { name: it.n, price: cents };
+  };
+
+  // === TASK TYPES ===
+  // Wir nutzen Cents integer, kein Float.
+  // task = { type, prompt, lines:[{qty,name,price}], payCents?, answerCents, optionsCents[], explainSteps[] }
+  const createTask = (grade) => {
+    // Gewichtung: 70% Kern, 30% Wiederholung
+    const coreTypes = ['total', 'change'];
+    const reviewTypes = ['total_easy'];
+
+    const roll = Math.random();
+    const type = roll < 0.70
+      ? coreTypes[rand(0, coreTypes.length - 1)]
+      : reviewTypes[rand(0, reviewTypes.length - 1)];
+
+    if (type === 'total_easy') return makeTotalTask(grade, true);
+    if (type === 'total') return makeTotalTask(grade, false);
+    return makeChangeTask(grade);
+  };
+
+  const makeTotalTask = (grade, easy) => {
+    // Anzahl Positionen: easy = 1–2, sonst 2–3
+    const positions = easy ? rand(1, 2) : rand(2, 3);
+
+    const used = new Set();
+    const lines = [];
+    for (let i = 0; i < positions; i++) {
+      let it;
+      for (let t = 0; t < 12; t++) {
+        it = pickItem(grade);
+        if (!used.has(it.name)) break;
+      }
+      used.add(it.name);
+
+      const qtyMax = grade === 1 ? (easy ? 2 : 3)
+                   : grade === 2 ? (easy ? 3 : 4)
+                   : grade === 3 ? (easy ? 3 : 5)
+                   : (easy ? 4 : 6);
+      const qtyMin = 1;
+      const qty = rand(qtyMin, qtyMax);
+
+      lines.push({ qty, name: it.name, price: it.price });
+    }
+
+    // Vereinfachung Kl.1: bei easy möglichst glatte 10/20/50 Cent
+    if (grade === 1 && easy) {
+      lines.forEach(l => {
+        const options = [50, 100, 150].filter(v => v <= 150);
+        l.price = options[rand(0, options.length - 1)];
+      });
+    }
+
+    const sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
+
+    const prompt = grade === 1
+      ? 'Wie viel kostet alles zusammen?'
+      : 'Wie teuer ist der Einkauf zusammen?';
+
+    const taskTag = (easy ? 'Summe (leicht)' : 'Summe');
+
+    const explainSteps = lines.map(l => ({
+      title: `${l.qty}× ${l.name}`,
+      math: `${l.qty} × ${fmtMoney(l.price)} = ${fmtMoney(l.qty * l.price)}`,
+      note: 'Erst mal jede Zeile ausrechnen.'
+    }));
+
+    explainSteps.push({
+      title: 'Alles addieren',
+      math: `${lines.map(l => fmtMoney(l.qty * l.price)).join(' + ')} = ${fmtMoney(sum)}`,
+      note: 'Dann alle Zwischensummen zusammenzählen.'
+    });
+
+    return buildTask({
+      type: 'total',
+      taskTag,
+      prompt,
+      lines,
+      answerCents: sum,
+      explainSteps
+    });
+  };
+
+  const makeChangeTask = (grade) => {
+    // 1–3 Positionen, dann bezahlen mit Schein/Münzen und Wechselgeld
+    const positions = grade === 1 ? 1 : rand(1, 3);
+    const used = new Set();
+    const lines = [];
+
+    for (let i = 0; i < positions; i++) {
+      let it;
+      for (let t = 0; t < 12; t++) {
+        it = pickItem(grade);
+        if (!used.has(it.name)) break;
+      }
+      used.add(it.name);
+
+      const qtyMax = grade === 1 ? 2 : grade === 2 ? 3 : grade === 3 ? 4 : 5;
+      const qty = rand(1, qtyMax);
+      lines.push({ qty, name: it.name, price: it.price });
+    }
+
+    let sum = lines.reduce((acc, l) => acc + (l.qty * l.price), 0);
+
+    // Bezahlen: so wählen, dass Wechselgeld positiv und "schön" ist
+    const pays = grade === 1 ? [200, 500, 1000] // 2€, 5€, 10€
+               : grade === 2 ? [500, 1000, 2000]
+               : grade === 3 ? [1000, 2000, 5000]
+               : [1000, 2000, 5000, 10000];
+
+    let pay = pays[rand(0, pays.length - 1)];
+    // Wenn Summe zu groß: Schein erhöhen
+    for (let i = 0; i < 6 && pay <= sum; i++) pay = pays[Math.min(pays.length - 1, rand(0, pays.length - 1))];
+    if (pay <= sum) pay = sum + (grade <= 2 ? 200 : 500);
+
+    // Bei Kl.1: lieber glatte Wechselgeldbeträge
+    if (grade === 1) {
+      // Summe auf Vielfache von 10 Cent runden (ohne den Sinn zu zerstören)
+      // (Wir ändern nicht die Preise, sondern wählen ggf. pay)
+      pay = [200, 500, 1000].find(p => p > sum) || (sum + 200);
+    }
+
+    const change = pay - sum;
+
+    const prompt = grade === 1
+      ? `Du bezahlst mit ${fmtMoney(pay)}. Wie viel Geld bekommst du zurück?`
+      : `Du gibst ${fmtMoney(pay)}. Wie viel Wechselgeld bekommst du?`;
+
+    const taskTag = 'Wechselgeld';
+
+    const explainSteps = lines.map(l => ({
+      title: `${l.qty}× ${l.name}`,
+      math: `${l.qty} × ${fmtMoney(l.price)} = ${fmtMoney(l.qty * l.price)}`,
+      note: 'Zeilen ausrechnen.'
+    }));
+
+    explainSteps.push({
+      title: 'Summe',
+      math: `${lines.map(l => fmtMoney(l.qty * l.price)).join(' + ')} = ${fmtMoney(sum)}`,
+      note: 'Das ist der Preis insgesamt.'
+    });
+
+    explainSteps.push({
+      title: 'Wechselgeld',
+      math: `${fmtMoney(pay)} − ${fmtMoney(sum)} = ${fmtMoney(change)}`,
+      note: 'Bezahlen minus Summe.'
+    });
+
+    return buildTask({
+      type: 'change',
+      taskTag,
+      prompt,
+      lines,
+      payCents: pay,
+      answerCents: change,
+      explainSteps
+    });
+  };
+
+  const buildTask = ({ type, taskTag, prompt, lines, payCents, answerCents, explainSteps }) => {
+    const options = makeOptions(answerCents, { type, lines, payCents });
+    const correctIndex = options.indexOf(answerCents);
+
+    return {
+      type,
+      taskTag,
+      prompt,
+      lines,
+      payCents: payCents ?? null,
+      answerCents,
+      optionsCents: options,
+      correctIndex,
+      explainSteps
+    };
+  };
+
+  // Distraktoren: typische Fehler (Cent vergessen, falsches Minus, eine Zeile nicht multipliziert, Rundung)
+  const makeOptions = (answerCents, ctx) => {
+    const opts = new Set([answerCents]);
+
+    const add = (v) => {
+      if (Number.isFinite(v) && v >= 0 && v <= 20000) opts.add(Math.round(v));
+    };
+
+    // Fehler 1: +/- 1€ (oder 50ct) je nach Klassenstufe
+    const bump = state.grade <= 2 ? 50 : 100;
+    add(answerCents + bump);
+    add(answerCents - bump);
+
+    // Fehler 2: Cent ignoriert (auf Euro runden)
+    const euroOnly = Math.round((Math.floor(answerCents / 100) * 100));
+    add(euroOnly);
+    add(euroOnly + 100);
+
+    // Fehler 3: Rechenzeichen vertauscht bei Wechselgeld (Summe statt Wechselgeld)
+    if (ctx.type === 'change' && ctx.payCents != null) {
+      const sum = ctx.payCents - answerCents; // tatsächliche Summe
+      add(sum);                               // falsche Antwort: Summe statt Wechselgeld
+      add(ctx.payCents + sum);                // komplett falsch (zu groß), wird meist rausfallen
+    }
+
+    // Fehler 4: Bei Summe: eine Position qty nicht multipliziert
+    if (ctx.type === 'total' && Array.isArray(ctx.lines) && ctx.lines.length > 0) {
+      const l = ctx.lines[rand(0, ctx.lines.length - 1)];
+      const wrong = answerCents - (l.qty * l.price) + l.price; // statt qty*price nur price
+      add(wrong);
+    }
+
+    // Streuung um Antwort
+    while (opts.size < 4) {
+      const delta = rand(-6, 6) * (state.grade <= 2 ? 25 : 50);
+      add(answerCents + delta);
+    }
+
+    const arr = Array.from(opts).slice(0, 4);
+    // Shuffle
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    // Sicherstellen: korrekt enthalten
+    if (!arr.includes(answerCents)) arr[0] = answerCents;
+
+    // Neu korrekt indexen durch erneutes Shuffle falls nötig
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+
+  // === UI UPDATES ===
+  const updateHeader = () => {
+    $('coins').textContent = state.coins;
+    $('score').textContent = state.score;
+    $('total').textContent = state.total;
+    $('streak').textContent = state.streak;
+  };
+
+  const updateGradeUI = () => {
+    document.querySelectorAll('.grade-btn').forEach(btn => {
+      btn.classList.toggle('selected', parseInt(btn.dataset.g, 10) === state.grade);
+    });
+  };
+
+  const updateHistoryDots = () => {
+    $('history-dots').innerHTML = state.history.slice(-10).map(item =>
+      `<div class="dot ${item.correct ? 'correct' : 'incorrect'}">${item.correct ? '✓' : '✗'}</div>`
+    ).join('');
+  };
+
+  const showFeedback = (text, type = '') => {
+    const fb = $('feedback');
+    fb.className = 'feedback' + (type ? ' ' + type : '');
+    fb.innerHTML = `<span class="ficon">${type === 'success' ? '✅' : type === 'error' ? '❌' : '📝'}</span><span>${text}</span>`;
+  };
+
+  const setReceipt = (task) => {
+    const receipt = $('receipt');
+    const linesEl = $('receipt-lines');
+    const metaEl = $('receipt-meta');
+
+    if (!task) {
+      receipt.style.display = 'none';
+      return;
+    }
+
+    $('task-tag').textContent = task.taskTag;
+    receipt.style.display = 'block';
+
+    linesEl.innerHTML = task.lines.map(l => {
+      const left = `${l.qty}× ${l.name}`;
+      const right = fmtMoney(l.price);
+      return `<div class="rline"><span class="name">${left}</span><span class="price">${right}</span></div>`;
+    }).join('');
+
+    const sum = task.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
+    metaEl.innerHTML = `
+      <span>Summe: <span style="color: var(--ink-primary)">${fmtMoney(sum)}</span></span>
+      ${task.payCents != null ? `<span>Du gibst: <span style="color: var(--ink-primary)">${fmtMoney(task.payCents)}</span></span>` : `<span>–</span>`}
+    `;
+  };
+
+  // === MODALS ===
+  const openModal = (id) => $(id).classList.add('open');
+  const closeModal = (id) => $(id).classList.remove('open');
+
+  const showStatsModal = () => {
+    const accuracy = state.total > 0 ? Math.round((state.score / state.total) * 100) : 0;
+
+    let html = `
+      <div class="explain">
+        <div class="ex-title">⭐ Punkte & Treffer</div>
+        <div class="ex-step">Punkte: <strong>${state.coins}</strong><small>+1 Punkt pro richtiger Aufgabe</small></div>
+        <div class="ex-step">Aufgaben: <strong>${state.total}</strong><small>Richtig: ${state.score} (${accuracy}%)</small></div>
+        <div class="ex-step">Beste Serie: <strong>${state.maxStreak}</strong><small>Aktuell: ${state.streak}</small></div>
+      </div>
+    `;
+
+    if (state.history.length > 0) {
+      html += `<div class="explain" style="margin-top: var(--s-2);">
+        <div class="ex-title">🧾 Letzte Aufgaben</div>
+        ${state.history.slice(-8).reverse().map(h => `
+          <div class="ex-step" style="border-color:${h.correct ? 'var(--color-success)' : 'var(--color-error)'}">
+            ${h.correct ? '✓' : '✗'} ${h.short}
+            <small>${h.answer}</small>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
+    $('stats-content').innerHTML = html;
+    openModal('modal-stats');
+  };
+
+  const showExplain = () => {
+    if (!state.currentTask) return;
+
+    const t = state.currentTask;
+    let html = `<div class="explain"><div class="ex-title">📝 Schritt für Schritt</div>`;
+
+    t.explainSteps.forEach(s => {
+      html += `<div class="ex-step">${s.title}: <strong>${s.math}</strong><small>${s.note}</small></div>`;
+    });
+
+    html += `<div class="ex-result">🎉 Antwort: ${fmtMoney(t.answerCents)}</div>`;
+
+    // Tipp: Probe / Plausibilität
+    if (t.type === 'change') {
+      const sum = t.payCents - t.answerCents;
+      html += `<div class="ex-tip">💡 Probe: Summe + Wechselgeld = ${fmtMoney(sum)} + ${fmtMoney(t.answerCents)} = ${fmtMoney(t.payCents)}</div>`;
+    } else {
+      html += `<div class="ex-tip">💡 Tipp: Rechne erst jede Zeile, dann addiere alles.</div>`;
+    }
+
+    html += `</div>`;
+    $('help-content').innerHTML = html;
+    openModal('modal-help');
+  };
+
+  // === GAME FLOW ===
+  const startNewTask = () => {
+    state.currentTask = createTask(state.grade);
+    state.answered = false;
+
+    $('task-title').textContent = state.currentTask.prompt;
+    $('task-sub').textContent = 'Tipp: Erst Zeilen, dann Summe (und ggf. Wechselgeld).';
+
+    setReceipt(state.currentTask);
+
+    showFeedback('Tippe auf die richtige Lösung.');
+    $('help-btn').disabled = false;
+
+    const answersEl = $('answers');
+    answersEl.innerHTML = '';
+
+    state.currentTask.optionsCents.forEach((cents, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'answer-btn';
+      btn.type = 'button';
+      btn.textContent = fmtMoney(cents);
+      btn.onclick = () => answerQuestion(idx);
+      answersEl.appendChild(btn);
+    });
+
+    playClick();
+  };
+
+  const answerQuestion = (selectedIndex) => {
+    if (state.answered || !state.currentTask) return;
+    state.answered = true;
+
+    const buttons = $('answers').querySelectorAll('.answer-btn');
+    const correctIndex = state.currentTask.correctIndex;
+    const isCorrect = selectedIndex === correctIndex;
+
+    buttons[correctIndex].classList.add('correct');
+
+    state.total++;
+
+    if (isCorrect) {
+      state.score++;
+      state.streak++;
+      state.maxStreak = Math.max(state.maxStreak, state.streak);
+
+      // Coins +1
+      state.coins++;
+      setStr(LS.coins, state.coins);
+
+      showFeedback('Richtig! Sehr gut – du bekommst ⭐ 1 Punkt.', 'success');
+      playCorrect();
+    } else {
+      state.streak = 0;
+      if (selectedIndex >= 0) buttons[selectedIndex].classList.add('incorrect');
+
+      showFeedback(`Fast! Richtig ist ${fmtMoney(state.currentTask.answerCents)}.`, 'error');
+      playIncorrect();
+    }
+
+    // History (kurz)
+    const sum = state.currentTask.lines.reduce((acc, l) => acc + l.qty * l.price, 0);
+    const short = state.currentTask.type === 'change'
+      ? `Wechselgeld aus ${fmtMoney(state.currentTask.payCents)}`
+      : `Summe ${fmtMoney(sum)}`;
+
+    state.history.push({
+      correct: isCorrect,
+      short,
+      answer: `Antwort: ${fmtMoney(state.currentTask.answerCents)}`
+    });
+
+    updateHeader();
+    updateHistoryDots();
+    saveState();
+  };
+
+  // === EVENTS ===
+  $('grades').addEventListener('click', (e) => {
+    const btn = e.target.closest('.grade-btn');
+    if (!btn) return;
+    state.grade = clampGrade(btn.dataset.g);
+    setStr(LS.grade, state.grade);
+    updateGradeUI();
+    playClick();
+  });
+
+  $('start-btn').addEventListener('click', startNewTask);
+  $('help-btn').addEventListener('click', showExplain);
+
+  $('stats-btn').addEventListener('click', showStatsModal);
+  $('stats-pill').addEventListener('click', showStatsModal);
+
+  $('settings-btn').addEventListener('click', () => openModal('modal-settings'));
+  $('toggle-sound').addEventListener('click', () => {
+    state.settings.sound = !state.settings.sound;
+    $('snd').textContent = state.settings.sound ? '🔊' : '🔇';
+    saveState();
+    playClick();
+  });
+
+  $('snd').addEventListener('click', () => {
+    state.settings.sound = !state.settings.sound;
+    $('snd').textContent = state.settings.sound ? '🔊' : '🔇';
+    saveState();
+    playClick();
+  });
+
+  $('coins-pill').addEventListener('click', () => {
+    const el = $('coins-pill');
+    el.style.transform = 'scale(1.08)';
+    setTimeout(() => el.style.transform = '', 160);
+  });
+
+  // Modal close
+  ['help', 'settings', 'stats'].forEach(name => {
+    $(`ok-${name}`).addEventListener('click', () => closeModal(`modal-${name}`));
+    $(`modal-${name}`).addEventListener('click', (e) => {
+      if (e.target === $(`modal-${name}`)) closeModal(`modal-${name}`);
+    });
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeModal('modal-help'); closeModal('modal-settings'); closeModal('modal-stats');
+      return;
+    }
+    if (document.querySelector('.overlay.open')) return;
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      $('start-btn').click();
+      return;
+    }
+    if ((e.key === 'e' || e.key === 'E') && state.currentTask) {
+      e.preventDefault();
+      $('help-btn').click();
+      return;
+    }
+    if ('1234'.includes(e.key)) {
+      const idx = parseInt(e.key, 10) - 1;
+      const btn = $('answers').querySelectorAll('.answer-btn')[idx];
+      if (btn) btn.click();
+    }
+  });
+
+  // === INIT ===
+  loadState();
+  updateHeader();
+  updateGradeUI();
+  updateHistoryDots();
+  $('snd').textContent = state.settings.sound ? '🔊' : '🔇';
+  showFeedback('Wähle eine Klasse und starte.');
+  console.log('✅ Kiosk-Sachaufgaben geladen.');
+})();
+</script>
+</body>
+</html>
